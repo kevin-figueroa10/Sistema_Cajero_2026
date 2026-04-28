@@ -1,0 +1,21 @@
+# Carpetas de compilación
+bin/
+obj/
+
+# Configuración de Visual Studio
+.vs/
+*.user
+*.suo
+
+# Logs
+*.log
+
+# Archivos temporales
+*.tmp
+
+# Publicaciones
+publish/
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
