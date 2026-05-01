@@ -166,6 +166,11 @@ namespace Cajero.Core.Services
                 return ResultadoOperacion.Error("El monto debe ser mayor a cero.", "MONTO_INVALIDO");
             }
 
+            if (monto < 5)
+            {
+                return ResultadoOperacion.Error("El monto mínimo de depósito es $5.00", "MONTO_MINIMO_INVALIDO");
+            }
+
             var cuenta = _repositorioCuenta.ObtenerPorId(cuentaId);
 
             if (cuenta == null)

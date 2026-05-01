@@ -89,7 +89,7 @@
                                 <strong>Monto:</strong>
                             </div>
                             <div class="col-6 text-right text-success">
-                                <strong>${@Model.Monto:N2}</strong>
+                                <strong>$@Model.Monto.ToString("N2")</strong>
                             </div>
                         </div>
 
@@ -100,7 +100,7 @@
                                     <small>Comisión:</small>
                                 </div>
                                 <div class="col-6 text-right">
-                                    <small class="text-danger">-${@Model.Comision:N2}</small>
+                                    <small class="text-danger">-$@Model.Comision.ToString("N2")</small>
                                 </div>
                             </div>
                         }
@@ -123,7 +123,7 @@
                             <strong>Saldo Anterior:</strong>
                         </div>
                         <div class="col-6 text-right">
-                            ${@Model.SaldoAnterior:N2}
+                            $@Model.SaldoAnterior.ToString("N2")
                         </div>
                     </div>
 
@@ -132,7 +132,7 @@
                             <strong>Saldo Nuevo:</strong>
                         </div>
                         <div class="col-6 text-right text-primary">
-                            <strong>${@Model.SaldoNuevo:N2}</strong>
+                            <strong>$@Model.SaldoNuevo.ToString("N2")</strong>
                         </div>
                     </div>
 
