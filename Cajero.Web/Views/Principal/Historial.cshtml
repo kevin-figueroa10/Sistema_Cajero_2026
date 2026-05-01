@@ -1,0 +1,213 @@
+@using Cajero.Core.Models
+
+@{
+    ViewData["Title"] = "Historial de Transacciones";
+    var transacciones = ViewData["Transacciones"] as IEnumerable<Transaccion>;
+}
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card shadow-lg">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">
+                        <i class="fas fa-history"></i> 📋 HISTORIAL DE TRANSACCIONES
+                    </h4>
+                </div>
+
+                <div class="card-body p-4">
+                    <!-- Filtros -->
+                    <div class="row mb-4">
+                        <div class="col-md-4">
+                            <input type="text" class="form-control" id="filtroTipo" placeholder="Filtrar por tipo..." onkeyup="filtrarHistorial()">
+                        </div>
+                        <div class="col-md-4">
+                            <input type="number" class="form-control" id="filtroMonto" placeholder="Filtrar por monto..." onkeyup="filtrarHistorial()">
+                        </div>
+                        <div class="col-md-4">
+                            <button class="btn btn-secondary btn-block" onclick="location.reload();">
+                                🔄 Recargar
+                            </button>
+                        </div>
+                    </div>
+
+                    @if (transacciones != null && transacciones.Any())
+                    {
+                        <!-- Resumen -->
+                        <div class="row mb-4">
+                            <div class="col-md-3">
+                                <div class="card text-center">
+                                    <div class="card-body">
+                                        <h6 class="card-title">Total Transacciones</h6>
+                                        <h3 class="text-primary">@transacciones.Count()</h3>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card text-center">
+                                    <div class="card-body">
+                                        <h6 class="card-title">Total Retiros</h6>
+                                        <h3 class="text-danger">@transacciones.Count(t => t.Tipo == "Retiro")</h3>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card text-center">
+                                    <div class="card-body">
+                                        <h6 class="card-title">Total Depósitos</h6>
+                                        <h3 class="text-success">@transacciones.Count(t => t.Tipo == "Depósito")</h3>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card text-center">
+                                    <div class="card-body">
+                                        <h6 class="card-title">Total Transferencias</h6>
+                                        <h3 class="text-info">@transacciones.Count(t => t.Tipo == "Transferencia")</h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tabla de Transacciones -->
+                        <div class="table-responsive">
+                            <table class="table table-hover table-striped" id="tablaTransacciones">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>📅 Fecha</th>
+                                        <th>⏰ Hora</th>
+                                        <th>📌 Tipo</th>
+                                        <th>📝 Descripción</th>
+                                        <th class="text-right">💵 Monto</th>
+                                        <th class="text-right">💰 Saldo Anterior</th>
+                                        <th class="text-right">💎 Saldo Nuevo</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var tx in transacciones)
+                                    {
+                                        <tr class="fila-transaccion" data-tipo="@tx.Tipo" data-monto="@tx.Monto">
+                                            <td>@tx.Fecha.ToString("dd/MM/yyyy")</td>
+                                            <td>@tx.Fecha.ToString("HH:mm:ss")</td>
+                                            <td>
+                                                @if (tx.Tipo == "Retiro")
+                                                {
+                                                    <span class="badge badge-danger" style="font-size: 12px;">📤 RETIRO</span>
+                                                }
+                                                else if (tx.Tipo == "Depósito")
+                                                {
+                                                    <span class="badge badge-success" style="font-size: 12px;">📥 DEPÓSITO</span>
+                                                }
+                                                else if (tx.Tipo == "Transferencia")
+                                                {
+                                                    <span class="badge badge-info" style="font-size: 12px;">🔄 TRANSFERENCIA</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                <small>@tx.Descripcion</small>
+                                            </td>
+                                            <td class="text-right">
+                                                @if (tx.Tipo == "Retiro")
+                                                {
+                                                    <span class="text-danger font-weight-bold">-$@tx.Monto.ToString("N2")</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-success font-weight-bold">+$@tx.Monto.ToString("N2")</span>
+                                                }
+                                            </td>
+                                            <td class="text-right text-muted">
+                                                <small>$@tx.SaldoAnterior.ToString("N2")</small>
+                                            </td>
+                                            <td class="text-right">
+                                                <strong class="text-primary">$@tx.SaldoNuevo.ToString("N2")</strong>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Información estadística -->
+                        <div class="mt-4 p-3" style="background-color: #f8f9fa; border-radius: 5px;">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <p class="mb-1"><strong>Monto Total Retirado:</strong></p>
+                                    <p class="text-danger">-$@transacciones.Where(t => t.Tipo == "Retiro").Sum(t => t.Monto).ToString("N2")</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p class="mb-1"><strong>Monto Total Depositado:</strong></p>
+                                    <p class="text-success">+$@transacciones.Where(t => t.Tipo == "Depósito").Sum(t => t.Monto).ToString("N2")</p>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-info text-center py-5">
+                            <h5>📭 No hay transacciones registradas</h5>
+                            <p>Realiza tu primera operación para ver el historial</p>
+                        </div>
+                    }
+
+                    <!-- Botones -->
+                    <div class="text-center mt-4">
+                        <a href="/Principal/" class="btn btn-primary btn-lg">
+                            ✅ Volver al Menú
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .fila-transaccion:hover {
+        background-color: #f0f0f0;
+        transition: background-color 0.3s;
+    }
+
+    .badge-danger {
+        background-color: #dc3545 !important;
+    }
+
+    .badge-success {
+        background-color: #28a745 !important;
+    }
+
+    .badge-info {
+        background-color: #17a2b8 !important;
+    }
+
+    .table-dark {
+        background-color: #2c3e50;
+    }
+
+    .card {
+        border: none;
+        border-radius: 10px;
+    }
+
+    .card-header {
+        border-radius: 10px 10px 0 0 !important;
+    }
+</style>
+
+<script>
+    function filtrarHistorial() {
+        var filtroTipo = document.getElementById('filtroTipo').value.toLowerCase();
+        var filtroMonto = document.getElementById('filtroMonto').value;
+        var filas = document.querySelectorAll('.fila-transaccion');
+
+        filas.forEach(function(fila) {
+            var tipo = fila.getAttribute('data-tipo').toLowerCase();
+            var monto = fila.getAttribute('data-monto');
+
+            var mostrarTipo = tipo.includes(filtroTipo) || filtroTipo === '';
+            var mostrarMonto = filtroMonto === '' || monto.includes(filtroMonto);
+
+            fila.style.display = (mostrarTipo && mostrarMonto) ? '' : 'none';
+        });
+    }
+</script>

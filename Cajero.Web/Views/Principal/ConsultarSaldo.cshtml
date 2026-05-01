@@ -1,0 +1,33 @@
+@using Cajero.Core.Models
+
+@{
+    ViewData["Title"] = "Consultar Saldo";
+    var saldo = ViewData["Saldo"] as RespuestaSaldo;
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    💰 Consulta de Saldo
+                </div>
+                <div class="card-body">
+                    @if (saldo != null)
+                    {
+                        <div class="saldo-display">
+                            $@saldo.Saldo.ToString("N2")
+                        </div>
+                        <div class="text-center">
+                            <p class="mb-2"><strong>Cuenta:</strong> @saldo.NumeroCuenta</p>
+                            <p class="mb-3"><strong>Titular:</strong> @saldo.Propietario</p>
+                        </div>
+                    }
+                    <div class="text-center">
+                        <a href="/Principal/" class="btn btn-primary">← Volver al Menú</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

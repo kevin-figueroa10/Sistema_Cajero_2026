@@ -1,0 +1,282 @@
+╔════════════════════════════════════════════════════════════════════════╗
+║                                                                        ║
+║           🔍 ANÁLISIS DE CARACTERÍSTICAS - ESTADO ACTUAL 🔍           ║
+║                                                                        ║
+║              ¿Qué está implementado? ¿Qué falta?                      ║
+║                                                                        ║
+╚════════════════════════════════════════════════════════════════════════╝
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1️⃣ RETIROS 💸
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ YA IMPLEMENTADO:
+  ✓ Validar monto > 0
+  ✓ Validar saldo suficiente
+  ✓ Registrar en historial
+  ✓ Actualizar saldo
+  ✓ Mensajes de error
+
+❌ PENDIENTE:
+  ✗ Validar múltiplos (ej: $5, $10, $20, $50, $100)
+  ✗ Límite diario (ej: máximo $1,000/día)
+  ✗ Montos máximos por transacción (ej: máx $500)
+
+UBICACIÓN: Cajero.Core/Services/ServicioCajero.cs
+Método: RealizarRetiro() línea 82
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+2️⃣ TRANSFERENCIAS 💰
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ YA IMPLEMENTADO:
+  ✓ Validar monto > 0
+  ✓ ✓ Verificar cuenta destino existe (LÍNEA 188)
+  ✓ ✓ No permitir transferirse a sí mismo (LÍNEA 180)
+  ✓ Validar saldo suficiente
+  ✓ Registrar en ambas cuentas
+  ✓ Actualizar saldos
+
+❌ PENDIENTE:
+  ✗ Límite diario (ej: máximo 5 transferencias/día)
+  ✗ Montos máximos por transferencia
+  ✗ Confirmación adicional (PIN, 2FA)
+  ✗ Comisión por transferencia (simulada)
+
+UBICACIÓN: Cajero.Core/Services/ServicioCajero.cs
+Método: RealizarTransferencia() línea 173
+
+CÓDIGO:
+┌────────────────────────────────────────────────────────────────┐
+│ if (cuentaOrigenId == cuentaDestinoId)                         │
+│ {                                                              │
+│     return ResultadoOperacion.Error(                           │
+│         "No se puede transferir a la misma cuenta.",           │
+│         "CUENTAS_IGUALES");                                    │
+│ }                                                              │
+│                                                                │
+│ var cuentaOrigen = _repositorioCuenta.ObtenerPorId(...);      │
+│ var cuentaDestino = _repositorioCuenta.ObtenerPorId(...);     │
+│                                                                │
+│ if (cuentaOrigen == null || cuentaDestino == null)            │
+│ {                                                              │
+│     return ResultadoOperacion.Error(                           │
+│         "Una o ambas cuentas no existen.",                     │
+│         "CUENTA_NO_EXISTE");                                   │
+│ }                                                              │
+└────────────────────────────────────────────────────────────────┘
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+3️⃣ HISTORIAL 📋
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ YA IMPLEMENTADO:
+  ✓ Mostrar todas las transacciones
+  ✓ Mostrar tipo de operación
+  ✓ Mostrar saldo anterior y nuevo
+  ✓ Mostrar monto
+  ✓ Mostrar descripción
+
+❌ PENDIENTE:
+  ✗ Mostrar saldo final en lista (solo en detalle)
+  ✗ Filtrar por tipo (Retiro, Depósito, Transferencia)
+  ✗ Filtrar por rango de fechas
+  ✗ Buscar por monto
+  ✗ Exportar a PDF/Excel
+  ✗ Paginación
+
+UBICACIÓN: Cajero.Core/Services/ServicioCajero.cs
+Método: ObtenerHistorialTransacciones() línea 246
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+4️⃣ TIPOS DE CUENTA 🏦
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ YA IMPLEMENTADO:
+  ✓ Modelo básico de Cuenta
+  ✓ Propiedades: Id, NumeroCuenta, PIN, Saldo, Activa
+
+❌ PENDIENTE:
+  ✗ Campo TipoCuenta (Ahorro, Corriente, Plazo)
+  ✗ Límites diferentes por tipo
+  ✗ Comisiones diferentes por tipo
+  ✗ Intereses
+  ✗ Mostrar tipo en interfaz
+
+UBICACIÓN: Cajero.Core/Models/Cuenta.cs
+
+PROPUESTA:
+┌────────────────────────────────────────────────────────────────┐
+│ public class Cuenta                                            │
+│ {                                                              │
+│     public int Id { get; set; }                                │
+│     public string NumeroCuenta { get; set; }                   │
+│     public string PIN { get; set; }                            │
+│     public string Propietario { get; set; }                    │
+│     public decimal Saldo { get; set; }                         │
+│     public bool Activa { get; set; }                           │
+│     public DateTime FechaCreacion { get; set; }                │
+│                                                                │
+│     // NUEVOS CAMPOS                                           │
+│     public string TipoCuenta { get; set; }  // Ahorro, etc     │
+│     public decimal LimiteDiarioRetiro { get; set; }            │
+│     public decimal ComisionTransferencia { get; set; }         │
+│ }                                                              │
+└────────────────────────────────────────────────────────────────┘
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+5️⃣ COMPROBANTES 🧾
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+❌ COMPLETAMENTE PENDIENTE:
+  ✗ Descargar comprobante PDF
+  ✗ Imprimir comprobante
+  ✗ Email con comprobante (simulado)
+  ✗ Número de referencia único
+  ✗ Timestamp exacto (fecha y hora)
+
+PROPUESTA:
+┌────────────────────────────────────────────────────────────────┐
+│ Características:                                               │
+│ • Número de referencia: TXN-20260101-001234                    │
+│ • Fecha/Hora exacta: 2026-01-15 14:30:45                       │
+│ • Detalles completos de la operación                           │
+│ • Saldos antes/después                                         │
+│ • Botón "Descargar PDF"                                        │
+│ • Botón "Imprimir" (simulado)                                  │
+│ • Link "Enviar por email" (simulado)                           │
+└────────────────────────────────────────────────────────────────┘
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+6️⃣ CANCELACIÓN ❌
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+❌ COMPLETAMENTE PENDIENTE:
+  ✗ Botón "Cancelar" en formularios
+  ✗ Confirmación antes de procesar
+  ✗ Modal de confirmación
+  ✗ Deshacer última operación
+
+NOTA: El sistema permite volver al menú pero sin confirmación
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+7️⃣ MENSAJES Y UX 💬
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ YA IMPLEMENTADO:
+  ✓ "Operación exitosa"
+  ✓ "Saldo insuficiente"
+  ✓ "Cuenta no encontrada"
+  ✓ "PIN incorrecto"
+  ✓ "No se puede transferir a la misma cuenta"
+  ✓ Mensajes específicos por error
+
+❌ PENDIENTE:
+  ✗ Toasts/Notificaciones (en lugar de redirects)
+  ✗ Animaciones de carga
+  ✗ Modal de confirmación
+  ✗ Avisos de seguridad (transacción grande)
+  ✗ Indicador visual de estado
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📊 RESUMEN EJECUTIVO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Característica           │ Estado      │ % Completo │ Prioridad
+─────────────────────────┼─────────────┼────────────┼──────────
+Operaciones Básicas      │ ✅ COMPLETO │    100%    │ -
+Validaciones Básicas     │ ✅ COMPLETO │    100%    │ -
+Transferencias           │ ✅ COMPLETO │    100%    │ -
+Controles Avanzados      │ ❌ PENDIENTE│      0%    │ ALTA
+Historial Avanzado       │ ❌ PENDIENTE│      0%    │ MEDIA
+Tipos de Cuenta          │ ❌ PENDIENTE│      0%    │ MEDIA
+Comprobantes             │ ❌ PENDIENTE│      0%    │ MEDIA
+UX Avanzada              │ ❌ PENDIENTE│     10%    │ BAJA
+────────────────────────────────────────────────────────────────
+TOTAL DEL SISTEMA        │ ✅ FUNCIONAL│     65%    │
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🎯 RECOMENDACIONES ORDENADAS POR PRIORIDAD
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🔴 PRIORIDAD ALTA (Mejoran Funcionalidad):
+  1. ⚠️ Límites de retiro por día
+  2. ⚠️ Validar múltiplos en retiro ($5, $10, etc)
+  3. ⚠️ Confirmación antes de transacciones
+  4. ⚠️ Historial con filtros básicos
+
+🟡 PRIORIDAD MEDIA (Mejoran Experiencia):
+  1. 📋 Tipos de cuenta (Ahorro, Corriente)
+  2. 📋 Comisiones por transferencia
+  3. 📋 Buscar en historial
+  4. 📋 Modal de confirmación
+
+🟢 PRIORIDAD BAJA (Nice to Have):
+  1. 🧾 Comprobantes PDF
+  2. 🧾 Exportar historial
+  3. 🧾 Email simulado
+  4. 🧾 Deshacer operación
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+💡 OBSERVACIONES IMPORTANTES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✓ YA VERIFICADAS (Transferencias):
+  • La cuenta destino SÍ se verifica (línea 188)
+  • NO permitir transferirse a sí mismo SÍ está (línea 180)
+  • ¡Excelente control implementado! 👍
+
+✗ FALTANTES CRÍTICOS:
+  • Límites de retiro (control de riesgo)
+  • Historial filtrable (usabilidad)
+  • Confirmación de operaciones (seguridad)
+
+✨ EXTRAS SUGERIDOS:
+  • Comisiones bancarias (realismo)
+  • Tipos de cuenta (funcionalidad)
+  • Comprobantes (documentación)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🚀 SIGUIENTE PASO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+¿CUÁL CARACTERÍSTICA DESEAS QUE IMPLEMENTE?
+
+Opción 1: Límites de Retiro y Validaciones Avanzadas
+  → Implementación: 30 minutos
+  → Impacto: ALTO
+  
+Opción 2: Historial con Filtros
+  → Implementación: 45 minutos
+  → Impacto: ALTO
+  
+Opción 3: Tipos de Cuenta
+  → Implementación: 1 hora
+  → Impacto: MEDIO
+  
+Opción 4: Comprobantes PDF
+  → Implementación: 1.5 horas
+  → Impacto: MEDIO
+  
+Opción 5: TODAS LAS ANTERIORES
+  → Implementación: 3-4 horas
+  → Impacto: MÁXIMO
+
+╔════════════════════════════════════════════════════════════════════════╗
+║                                                                        ║
+║    Sistema base está sólido (65% completo). Listo para mejoras        ║
+║                                                                        ║
+║              ¿Cuál deseas que implemente? 🚀                         ║
+║                                                                        ║
+╚════════════════════════════════════════════════════════════════════════╝

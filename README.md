@@ -1,1 +1,0 @@
-# Catedra_PAL_2026

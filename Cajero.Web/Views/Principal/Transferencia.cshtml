@@ -1,0 +1,52 @@
+@{
+    ViewData["Title"] = "Realizar Transferencia";
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    💸 Realizar Transferencia
+                </div>
+                <div class="card-body">
+                    <form method="post" action="/Principal/Transferencia">
+                        <div class="form-group">
+                            <label for="cuentaDestino" class="form-label">Número de Cuenta Destino</label>
+                            <select class="form-select" id="cuentaDestino" name="cuentaDestino" required>
+                                <option value="">-- Selecciona una cuenta --</option>
+                                <option value="1">Cuenta 1001 - Juan García</option>
+                                <option value="2">Cuenta 1002 - María López</option>
+                                <option value="3">Cuenta 1003 - Carlos Martínez</option>
+                            </select>
+                            <small class="text-muted">Selecciona la cuenta a la que deseas transferir</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="monto" class="form-label">Monto a Transferir ($)</label>
+                            <input type="number" class="form-control" id="monto" name="monto" 
+                                   step="0.01" min="0.01" placeholder="0.00" required>
+                            <small class="text-muted">Ingresa el monto que deseas transferir</small>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-success">Confirmar Transferencia</button>
+                            <a href="/Principal/" class="btn btn-secondary">Cancelar</a>
+                        </div>
+                    </form>
+
+                    <hr>
+
+                    <div class="alert alert-info">
+                        <strong>💡 Información:</strong>
+                        <ul class="mb-0 mt-2">
+                            <li>Verifica bien el número de cuenta destino</li>
+                            <li>Las transferencias son inmediatas</li>
+                            <li>Se requiere saldo disponible</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

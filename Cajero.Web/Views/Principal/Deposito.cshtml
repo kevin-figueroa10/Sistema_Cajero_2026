@@ -1,0 +1,48 @@
+@{
+    ViewData["Title"] = "Realizar Depósito";
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    📥 Realizar Depósito
+                </div>
+                <div class="card-body">
+                    <form method="post" action="/Principal/Deposito">
+                        <div class="form-group">
+                            <label for="monto" class="form-label">Monto a Depositar ($)</label>
+                            <input type="number" class="form-control" id="monto" name="monto" 
+                                   step="0.01" min="0.01" placeholder="0.00" required autofocus>
+                            <small class="text-muted">Ingresa el monto que deseas depositar</small>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-success">Confirmar Depósito</button>
+                            <a href="/Principal/" class="btn btn-secondary">Cancelar</a>
+                        </div>
+                    </form>
+
+                    <hr>
+
+                    <div class="alert alert-info">
+                        <strong>Montos rápidos:</strong>
+                        <div class="mt-2">
+                            <a href="javascript:setMonto(50)" class="btn btn-sm btn-outline-info">$50</a>
+                            <a href="javascript:setMonto(100)" class="btn btn-sm btn-outline-info">$100</a>
+                            <a href="javascript:setMonto(200)" class="btn btn-sm btn-outline-info">$200</a>
+                            <a href="javascript:setMonto(500)" class="btn btn-sm btn-outline-info">$500</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function setMonto(cantidad) {
+        document.getElementById('monto').value = cantidad;
+    }
+</script>
