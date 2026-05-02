@@ -87,8 +87,8 @@ namespace Cajero.Core.Models
                 TipoCuentaEnum.Ahorro => new ConfiguracionCuenta
                 {
                     Tipo = TipoCuentaEnum.Ahorro,
-                    LimiteDiarioRetiro = 1000m,
-                    LimitePorTransaccion = 500m,
+                    LimiteDiarioRetiro = 3000m,
+                    LimitePorTransaccion = 1000m,
                     MultiplosPermitidos = new List<decimal> { 5, 10, 20, 50, 100 },
                     MaximoTransferenciasDialas = 3,
                     ComisionTransferencia = 0m
@@ -96,7 +96,7 @@ namespace Cajero.Core.Models
                 TipoCuentaEnum.Corriente => new ConfiguracionCuenta
                 {
                     Tipo = TipoCuentaEnum.Corriente,
-                    LimiteDiarioRetiro = 2000m,
+                    LimiteDiarioRetiro = 3000m,
                     LimitePorTransaccion = 1000m,
                     MultiplosPermitidos = new List<decimal> { 5, 10, 20, 50, 100, 200 },
                     MaximoTransferenciasDialas = 10,

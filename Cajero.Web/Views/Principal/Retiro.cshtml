@@ -13,10 +13,10 @@
                 <div class="card-body p-4">
                     <!-- Información de límites -->
                     <div class="alert alert-warning" role="alert">
-                        <strong>⚠️ Límites de Retiro:</strong><br>
+                        <strong>⚠️ Límites de Retiro (BANCO NEW SMART CAPITAL):</strong><br>
                         <small>
-                            • Monto máximo por transacción: <strong>$500</strong><br>
-                            • Límite diario: <strong>$1,000</strong><br>
+                            • Monto máximo por transacción: <strong>$1,000</strong><br>
+                            • Límite diario: <strong>$3,000</strong><br>
                             • Múltiplos permitidos: <strong>$5, $10, $20, $50, $100</strong>
                         </small>
                     </div>
@@ -25,8 +25,8 @@
                         <div class="form-group">
                             <label for="monto" class="form-label"><strong>Monto a Retirar ($)</strong></label>
                             <input type="number" class="form-control form-control-lg" id="monto" name="monto" 
-                                   step="1" min="5" max="500" placeholder="0.00" required autofocus>
-                            <small class="form-text text-muted">Ingresa un monto en múltiplos de $5</small>
+                                   step="1" min="5" max="1000" placeholder="0.00" required autofocus>
+                            <small class="form-text text-muted">Ingresa un monto en múltiplos de $5 (máximo $1,000)</small>
                             <div id="errorMensaje" class="alert alert-danger mt-2" style="display:none;"></div>
                         </div>
 
@@ -118,9 +118,9 @@
             return false;
         }
 
-        // Validar límite por transacción
-        if (monto > 500) {
-            errorDiv.textContent = '❌ El límite máximo por transacción es $500';
+        // Validar límite por transacción (ahora $1,000)
+        if (monto > 1000) {
+            errorDiv.textContent = '❌ El límite máximo por transacción es $1,000';
             errorDiv.style.display = 'block';
             return false;
         }
