@@ -327,6 +327,26 @@ namespace Cajero.Web.Controllers
         }
 
         /// <summary>
+        /// Muestra los detalles de la cuenta con tarjeta visual.
+        /// </summary>
+        public IActionResult MiCuenta()
+        {
+            if (!ValidarSesion())
+                return RedirectToAction("Index", "Autenticacion");
+
+            var cuentaId = ObtenerCuentaId().Value;
+            var cuenta = _servicioCajero.ObtenerCuenta(cuentaId);
+
+            if (cuenta == null)
+            {
+                TempData["Error"] = "Cuenta no encontrada.";
+                return RedirectToAction("Index");
+            }
+
+            return View(cuenta);
+        }
+
+        /// <summary>
         /// Muestra el comprobante de la operación realizada.
         /// </summary>
         public IActionResult Comprobante()
