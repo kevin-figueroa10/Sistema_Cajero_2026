@@ -118,11 +118,10 @@ namespace Cajero.Core.Services
                 return ResultadoOperacion.Error($"Límite diario de retiro excedido. Disponible: ${disponible:N2}", "LIMITE_DIARIO_EXCEDIDO");
             }
 
-            // Validar múltiplos
-            if (config.MultiplosPermitidos.Any() && !config.MultiplosPermitidos.Contains(monto))
+            // Validar múltiplos de 5
+            if (monto % 5 != 0)
             {
-                var multiplos = string.Join(", $", config.MultiplosPermitidos);
-                return ResultadoOperacion.Error($"Los retiros deben ser múltiplos de: ${multiplos}", "MULTIPLO_NO_VALIDO");
+                return ResultadoOperacion.Error("El monto debe ser múltiplo de $5", "MULTIPLO_NO_VALIDO");
             }
 
             if (cuenta.Saldo < monto)
