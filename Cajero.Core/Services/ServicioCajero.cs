@@ -326,6 +326,14 @@ namespace Cajero.Core.Services
         }
 
         /// <summary>
+        /// Obtiene los detalles completos de una cuenta.
+        /// </summary>
+        public Cuenta ObtenerCuenta(int cuentaId)
+        {
+            return _repositorioCuenta.ObtenerPorId(cuentaId);
+        }
+
+        /// <summary>
         /// Genera un comprobante de transacción.
         /// </summary>
         private Comprobante GenerarComprobante(

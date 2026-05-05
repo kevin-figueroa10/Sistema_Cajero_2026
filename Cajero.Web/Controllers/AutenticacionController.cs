@@ -46,9 +46,16 @@ namespace Cajero.Web.Controllers
             if (resultado.Exitoso)
             {
                 var datos = (RespuestaAutenticacion)resultado.Datos;
+
+                // Obtener información adicional de la cuenta
+                var cuenta = _servicioCajero.ObtenerCuenta(datos.CuentaId);
+
                 HttpContext.Session.SetInt32("CuentaId", datos.CuentaId);
                 HttpContext.Session.SetString("Propietario", datos.Propietario);
                 HttpContext.Session.SetString("NumeroCuenta", numeroCuenta);
+                HttpContext.Session.SetString("TipoCuenta", cuenta.TipoCuenta.ToString());
+                HttpContext.Session.SetString("Saldo", cuenta.Saldo.ToString("F2"));
+                HttpContext.Session.SetString("FechaCreacion", cuenta.FechaCreacion.ToString("dd/MM/yyyy"));
 
                 _logger.LogInformation($"Login exitoso para: {numeroCuenta}");
                 return RedirectToAction("Index", "Principal");

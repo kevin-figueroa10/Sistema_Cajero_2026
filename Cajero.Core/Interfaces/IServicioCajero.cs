@@ -14,5 +14,6 @@ namespace Cajero.Core.Interfaces
         ResultadoOperacion RealizarDeposito(int cuentaId, decimal monto);
         ResultadoOperacion RealizarTransferencia(int cuentaOrigenId, int cuentaDestinoId, decimal monto);
         ResultadoOperacion ObtenerHistorialTransacciones(int cuentaId);
+        Cuenta ObtenerCuenta(int cuentaId);
     }
 }

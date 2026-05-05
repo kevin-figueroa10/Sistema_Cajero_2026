@@ -213,6 +213,17 @@ namespace Cajero.Web.Controllers
         }
 
         /// <summary>
+        /// Muestra los detalles de la cuenta.
+        /// </summary>
+        public IActionResult MiCuenta()
+        {
+            if (!ValidarSesion())
+                return RedirectToAction("Index", "Autenticacion");
+
+            return View();
+        }
+
+        /// <summary>
         /// Muestra el comprobante de la operación realizada.
         /// </summary>
         public IActionResult Comprobante()

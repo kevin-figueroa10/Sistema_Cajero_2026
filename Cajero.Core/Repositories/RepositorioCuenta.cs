@@ -27,29 +27,35 @@ namespace Cajero.Core.Repositories
                     new Cuenta 
                     { 
                         Id = 1, 
-                        NumeroCuenta = "1001", 
-                        Propietario = "Juan García", 
-                        PIN = "1234", 
-                        Saldo = 5000m,
-                        Activa = true
+                        NumeroCuenta = "412087654321", 
+                        Propietario = "Juan García López", 
+                        PIN = "8475", 
+                        Saldo = 15750.50m,
+                        TipoCuenta = TipoCuentaEnum.Corriente,
+                        Activa = true,
+                        FechaCreacion = new DateTime(2022, 3, 15)
                     },
                     new Cuenta 
                     { 
                         Id = 2, 
-                        NumeroCuenta = "1002", 
-                        Propietario = "María López", 
-                        PIN = "5678", 
-                        Saldo = 8500m,
-                        Activa = true
+                        NumeroCuenta = "412087654322", 
+                        Propietario = "María López Rodríguez", 
+                        PIN = "5829", 
+                        Saldo = 23400.75m,
+                        TipoCuenta = TipoCuentaEnum.Ahorro,
+                        Activa = true,
+                        FechaCreacion = new DateTime(2021, 7, 22)
                     },
                     new Cuenta 
                     { 
                         Id = 3, 
-                        NumeroCuenta = "1003", 
-                        Propietario = "Carlos Martínez", 
-                        PIN = "9012", 
-                        Saldo = 12000m,
-                        Activa = true
+                        NumeroCuenta = "412087654323", 
+                        Propietario = "Carlos Martínez González", 
+                        PIN = "9403", 
+                        Saldo = 45600.00m,
+                        TipoCuenta = TipoCuentaEnum.Corriente,
+                        Activa = true,
+                        FechaCreacion = new DateTime(2020, 11, 10)
                     }
                 };
                 _proximoId = 4;

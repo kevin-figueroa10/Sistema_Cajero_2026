@@ -1,0 +1,188 @@
+@{
+    ViewData["Title"] = "Mi Cuenta";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <!-- Tarjeta de Cuenta -->
+            <div class="card shadow-lg mb-4" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 20px;">
+                <div class="card-body p-5">
+                    <!-- Header -->
+                    <div class="row mb-5">
+                        <div class="col-6">
+                            <h3 style="font-size: 24px; font-weight: bold;">🏦 BANCO NEW SMART CAPITAL</h3>
+                        </div>
+                        <div class="col-6 text-right">
+                            <h5 style="opacity: 0.8;">DEBIT CARD</h5>
+                        </div>
+                    </div>
+
+                    <!-- Número de Cuenta -->
+                    <div class="mb-5">
+                        <small style="opacity: 0.8;">NÚMERO DE CUENTA</small>
+                        <p style="font-size: 24px; font-weight: bold; letter-spacing: 2px; font-family: 'Courier New';">
+                            @Context.Session.GetString("NumeroCuenta")
+                        </p>
+                    </div>
+
+                    <!-- Titular y Fechas -->
+                    <div class="row">
+                        <div class="col-6">
+                            <small style="opacity: 0.8;">TITULAR</small>
+                            <p style="font-size: 16px; font-weight: bold;">@Context.Session.GetString("Propietario").ToUpper()</p>
+                        </div>
+                        <div class="col-6 text-right">
+                            <small style="opacity: 0.8;">VÁLIDA HASTA</small>
+                            <p style="font-size: 16px; font-weight: bold;">@DateTime.Now.AddYears(5).ToString("MM/yy")</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Información de la Cuenta -->
+            <div class="card shadow-lg">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">📋 Detalles de la Cuenta</h4>
+                </div>
+
+                <div class="card-body p-4">
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="detail-box">
+                                <label>Tipo de Cuenta</label>
+                                <p class="value">
+                                    <span class="badge badge-info badge-lg">
+                                        @(Context.Session.GetString("TipoCuenta") ?? "Ahorro")
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="detail-box">
+                                <label>Estado</label>
+                                <p class="value">
+                                    <span class="badge badge-success badge-lg">✅ Activa</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="detail-box">
+                                <label>Número de Cuenta</label>
+                                <p class="value" style="font-family: 'Courier New'; font-size: 14px;">
+                                    @Context.Session.GetString("NumeroCuenta")
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="detail-box">
+                                <label>PIN</label>
+                                <p class="value">
+                                    <code style="background: #f0f0f0; padding: 5px 10px; border-radius: 5px;">••••</code>
+                                    <small class="text-muted d-block mt-2">Por seguridad, tu PIN no se muestra</small>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="detail-box">
+                                <label>Saldo Actual</label>
+                                <p class="value" style="color: #28a745; font-size: 20px; font-weight: bold;">
+                                    $@(Context.Session.GetString("Saldo") ?? "0.00")
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="detail-box">
+                                <label>Fecha de Habilitación</label>
+                                <p class="value">
+                                    @(Context.Session.GetString("FechaCreacion") ?? DateTime.Now.ToString("dd/MM/yyyy"))
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="detail-box">
+                                <label>Fecha de Expiración</label>
+                                <p class="value">
+                                    @DateTime.Now.AddYears(5).ToString("MM/yyyy")
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="detail-box">
+                                <label>Titular</label>
+                                <p class="value">
+                                    @Context.Session.GetString("Propietario")
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="my-5">
+
+                    <!-- Información de Límites -->
+                    <div class="alert alert-info">
+                        <h5>💡 Límites de tu Cuenta</h5>
+                        <ul class="mb-0">
+                            <li><strong>Máximo por Retiro:</strong> $1,000</li>
+                            <li><strong>Límite Diario:</strong> $3,000</li>
+                            <li><strong>Múltiplos de:</strong> $5</li>
+                        </ul>
+                    </div>
+
+                    <div class="d-grid gap-2 mt-4">
+                        <a href="/Principal/" class="btn btn-primary btn-lg">
+                            ← Volver al Menú
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .detail-box {
+        margin-bottom: 1.5rem;
+    }
+
+    .detail-box label {
+        display: block;
+        font-size: 12px;
+        color: #6c757d;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+    }
+
+    .detail-box .value {
+        font-size: 16px;
+        color: #333;
+        margin: 0;
+        font-weight: 500;
+    }
+
+    .badge-lg {
+        font-size: 12px;
+        padding: 6px 12px;
+    }
+
+    code {
+        font-family: 'Courier New', monospace;
+    }
+
+    .card {
+        border: none;
+    }
+</style>
