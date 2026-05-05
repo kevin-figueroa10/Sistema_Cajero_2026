@@ -110,6 +110,13 @@
             return false;
         }
 
+        // Validar múltiplos de 5
+        if (monto % 5 !== 0) {
+            errorMonto.textContent = '❌ El monto debe ser múltiplo de $5 (5, 10, 15, 20, etc.)';
+            errorMonto.style.display = 'block';
+            return false;
+        }
+
         return true;
     }
 </script>

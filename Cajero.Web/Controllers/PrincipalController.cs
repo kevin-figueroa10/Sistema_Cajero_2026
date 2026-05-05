@@ -164,7 +164,7 @@ namespace Cajero.Web.Controllers
         /// <summary>
         /// Busca la cuenta destino y muestra confirmación con nombre del titular.
         /// </summary>
-        [HttpPost("Principal/Transferencia")]
+        [HttpPost]
         public IActionResult BuscarCuentaTransferencia(string cuentaDestino, decimal monto)
         {
             if (!ValidarSesion())
@@ -172,6 +172,26 @@ namespace Cajero.Web.Controllers
 
             var cuentaOrigenId = ObtenerCuentaId().Value;
             var cuentaOrigen = _servicioCajero.ObtenerCuenta(cuentaOrigenId);
+
+            // Validar monto
+            if (monto <= 0)
+            {
+                TempData["Error"] = "El monto debe ser mayor a cero.";
+                return RedirectToAction("Transferencia");
+            }
+
+            if (monto < 5)
+            {
+                TempData["Error"] = "El monto mínimo de transferencia es $5.00";
+                return RedirectToAction("Transferencia");
+            }
+
+            // Validar múltiplos de 5
+            if (monto % 5 != 0)
+            {
+                TempData["Error"] = "El monto debe ser múltiplo de $5";
+                return RedirectToAction("Transferencia");
+            }
 
             // Buscar cuenta destino por número
             var resultado = _servicioCajero.BuscarCuentaPorNumero(cuentaDestino);
@@ -186,6 +206,13 @@ namespace Cajero.Web.Controllers
 
             // Validar que no sea la misma cuenta
             if (cuentaOrigenId == cuentaDestinoObj.Id)
+            {
+                TempData["Error"] = "No puedes transferir a tu propia cuenta.";
+                return RedirectToAction("Transferencia");
+            }
+
+            // Validar que el número de cuenta es diferente (double-check)
+            if (cuentaOrigen.NumeroCuenta == cuentaDestinoObj.NumeroCuenta)
             {
                 TempData["Error"] = "No puedes transferir a tu propia cuenta.";
                 return RedirectToAction("Transferencia");
