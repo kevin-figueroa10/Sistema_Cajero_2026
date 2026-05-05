@@ -162,18 +162,64 @@ namespace Cajero.Web.Controllers
         }
 
         /// <summary>
-        /// Procesa una transferencia.
+        /// Busca la cuenta destino y muestra confirmación con nombre del titular.
         /// </summary>
-        [HttpPost]
-        public IActionResult Transferencia(int cuentaDestino, decimal monto)
+        [HttpPost("Principal/Transferencia")]
+        public IActionResult BuscarCuentaTransferencia(string cuentaDestino, decimal monto)
         {
             if (!ValidarSesion())
                 return RedirectToAction("Index", "Autenticacion");
 
-            _logger.LogInformation($"Transferencia solicitada a cuenta: {cuentaDestino}, monto: ${monto}");
+            var cuentaOrigenId = ObtenerCuentaId().Value;
+            var cuentaOrigen = _servicioCajero.ObtenerCuenta(cuentaOrigenId);
 
-            var cuentaId = ObtenerCuentaId().Value;
-            var resultado = _servicioCajero.RealizarTransferencia(cuentaId, cuentaDestino, monto);
+            // Buscar cuenta destino por número
+            var resultado = _servicioCajero.BuscarCuentaPorNumero(cuentaDestino);
+
+            if (!resultado.Exitoso || resultado.Datos == null)
+            {
+                TempData["Error"] = resultado.Mensaje;
+                return RedirectToAction("Transferencia");
+            }
+
+            var cuentaDestinoObj = (Cuenta)resultado.Datos;
+
+            // Validar que no sea la misma cuenta
+            if (cuentaOrigenId == cuentaDestinoObj.Id)
+            {
+                TempData["Error"] = "No puedes transferir a tu propia cuenta.";
+                return RedirectToAction("Transferencia");
+            }
+
+            // Guardar monto temporalmente
+            ViewBag.Monto = monto;
+
+            return View("ConfirmarTransferencia", cuentaDestinoObj);
+        }
+
+        /// <summary>
+        /// Confirma y procesa la transferencia.
+        /// </summary>
+        [HttpPost("Principal/ConfirmarTransferencia")]
+        public IActionResult ConfirmarTransferencia(string cuentaDestino, decimal monto)
+        {
+            if (!ValidarSesion())
+                return RedirectToAction("Index", "Autenticacion");
+
+            _logger.LogInformation($"Transferencia confirmada: ${monto} a {cuentaDestino}");
+
+            var cuentaOrigenId = ObtenerCuentaId().Value;
+
+            // Buscar el ID de la cuenta por número
+            var cuentaDestinoBusqueda = _servicioCajero.BuscarCuentaPorNumero(cuentaDestino);
+            if (!cuentaDestinoBusqueda.Exitoso)
+            {
+                TempData["Error"] = "Cuenta destino no encontrada.";
+                return RedirectToAction("Transferencia");
+            }
+
+            var cuentaDestinoObj = (Cuenta)cuentaDestinoBusqueda.Datos;
+            var resultado = _servicioCajero.RealizarTransferencia(cuentaOrigenId, cuentaDestinoObj.Id, monto);
 
             if (resultado.Exitoso)
             {
@@ -190,7 +236,7 @@ namespace Cajero.Web.Controllers
         }
 
         /// <summary>
-        /// Muestra el historial de transacciones.
+        /// Historial de transacciones.
         /// </summary>
         public IActionResult Historial()
         {
@@ -251,71 +297,6 @@ namespace Cajero.Web.Controllers
             // Aquí iría la lógica para actualizar el PIN (implementar en servicio)
             TempData["Mensaje"] = "PIN cambiado exitosamente.";
             return RedirectToAction("Index");
-        }
-
-        /// <summary>
-        /// Muestra la confirmación de transferencia con datos de la cuenta destino.
-        /// </summary>
-        [HttpPost]
-        public IActionResult Transferencia(string cuentaDestino, decimal monto)
-        {
-            if (!ValidarSesion())
-                return RedirectToAction("Index", "Autenticacion");
-
-            var cuentaOrigenId = ObtenerCuentaId().Value;
-            var cuentaOrigen = _servicioCajero.ObtenerCuenta(cuentaOrigenId);
-
-            // Buscar cuenta destino por número
-            // Esto requiere crear un método en el servicio para buscar por número de cuenta
-            var resultado = _servicioCajero.BuscarCuentaPorNumero(cuentaDestino);
-
-            if (!resultado.Exitoso || resultado.Datos == null)
-            {
-                TempData["Error"] = resultado.Mensaje;
-                return RedirectToAction("Transferencia");
-            }
-
-            var cuentaDestinoObj = (Cuenta)resultado.Datos;
-
-            // Validar que no sea la misma cuenta
-            if (cuentaOrigenId == cuentaDestinoObj.Id)
-            {
-                TempData["Error"] = "No puedes transferir a tu propia cuenta.";
-                return RedirectToAction("Transferencia");
-            }
-
-            // Guardar monto temporalmente
-            ViewBag.Monto = monto;
-
-            return View("ConfirmarTransferencia", cuentaDestinoObj);
-        }
-
-        /// <summary>
-        /// Confirma y procesa la transferencia.
-        /// </summary>
-        [HttpPost]
-        public IActionResult ConfirmarTransferencia(string cuentaDestino, decimal monto)
-        {
-            if (!ValidarSesion())
-                return RedirectToAction("Index", "Autenticacion");
-
-            _logger.LogInformation($"Transferencia solicitada: ${monto} a {cuentaDestino}");
-
-            var cuentaOrigenId = ObtenerCuentaId().Value;
-            var resultado = _servicioCajero.RealizarTransferencia(cuentaOrigenId, int.Parse(cuentaDestino), monto);
-
-            if (resultado.Exitoso)
-            {
-                var datosTransferencia = (RespuestaOperacionConComprobante)resultado.Datos;
-                TempData["Exito"] = resultado.Mensaje;
-                TempData["Comprobante"] = System.Text.Json.JsonSerializer.Serialize(datosTransferencia.Comprobante);
-                _logger.LogInformation($"Transferencia exitosa: ${monto}");
-                return RedirectToAction("Comprobante");
-            }
-
-            TempData["Error"] = resultado.Mensaje;
-            _logger.LogWarning($"Transferencia fallida: {resultado.Mensaje}");
-            return RedirectToAction("Transferencia");
         }
 
         /// <summary>
