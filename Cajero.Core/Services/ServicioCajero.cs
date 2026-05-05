@@ -334,6 +334,26 @@ namespace Cajero.Core.Services
         }
 
         /// <summary>
+        /// Busca una cuenta por número de cuenta.
+        /// </summary>
+        public ResultadoOperacion BuscarCuentaPorNumero(string numeroCuenta)
+        {
+            var cuenta = _repositorioCuenta.ObtenerPorNumeroCuenta(numeroCuenta);
+
+            if (cuenta == null)
+            {
+                return ResultadoOperacion.Error("Cuenta no encontrada.", "CUENTA_NO_EXISTE");
+            }
+
+            if (!cuenta.Activa)
+            {
+                return ResultadoOperacion.Error("La cuenta destino no está activa.", "CUENTA_INACTIVA");
+            }
+
+            return ResultadoOperacion.Exito("Cuenta encontrada.", cuenta);
+        }
+
+        /// <summary>
         /// Genera un comprobante de transacción.
         /// </summary>
         private Comprobante GenerarComprobante(

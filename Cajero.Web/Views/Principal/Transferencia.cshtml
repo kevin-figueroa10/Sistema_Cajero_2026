@@ -2,47 +2,66 @@
     ViewData["Title"] = "Realizar Transferencia";
 }
 
-<div class="container">
+<div class="container mt-5">
     <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header">
-                    💸 Realizar Transferencia
+        <div class="col-lg-6">
+            <div class="card shadow-lg">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0">💸 REALIZAR TRANSFERENCIA</h4>
                 </div>
-                <div class="card-body">
-                    <form method="post" action="/Principal/Transferencia">
+                <div class="card-body p-4">
+                    <form method="post" action="/Principal/Transferencia" id="formTransferencia" onsubmit="return validarTransferencia()">
                         <div class="form-group">
-                            <label for="cuentaDestino" class="form-label">Número de Cuenta Destino</label>
-                            <select class="form-select" id="cuentaDestino" name="cuentaDestino" required>
-                                <option value="">-- Selecciona una cuenta --</option>
-                                <option value="1">Cuenta 1001 - Juan García</option>
-                                <option value="2">Cuenta 1002 - María López</option>
-                                <option value="3">Cuenta 1003 - Carlos Martínez</option>
-                            </select>
-                            <small class="text-muted">Selecciona la cuenta a la que deseas transferir</small>
+                            <label for="cuentaDestino" class="form-label"><strong>Número de Cuenta Destino</strong></label>
+                            <input type="text" class="form-control form-control-lg" id="cuentaDestino" name="cuentaDestino" 
+                                   placeholder="Ej: 412087654322" required autofocus>
+                            <small class="form-text text-muted">Ingresa el número de cuenta (12 dígitos)</small>
+                            <div id="errorCuenta" class="alert alert-danger mt-2" style="display:none;"></div>
                         </div>
 
                         <div class="form-group">
-                            <label for="monto" class="form-label">Monto a Transferir ($)</label>
-                            <input type="number" class="form-control" id="monto" name="monto" 
-                                   step="0.01" min="0.01" placeholder="0.00" required>
-                            <small class="text-muted">Ingresa el monto que deseas transferir</small>
+                            <label for="monto" class="form-label"><strong>Monto a Transferir ($)</strong></label>
+                            <input type="number" class="form-control form-control-lg" id="monto" name="monto" 
+                                   step="0.01" min="5" placeholder="0.00" required>
+                            <small class="form-text text-muted">Mínimo: $5.00</small>
+                            <div id="errorMonto" class="alert alert-danger mt-2" style="display:none;"></div>
+                        </div>
+
+                        <!-- Resumen -->
+                        <div class="card mb-3" style="background-color: #f8f9fa;">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <p class="mb-1 text-muted"><small>Monto:</small></p>
+                                        <h5 id="montoMuestra" class="text-success">$0.00</h5>
+                                    </div>
+                                    <div class="col-6 text-right">
+                                        <p class="mb-1 text-muted"><small>Comisión (1.5%):</small></p>
+                                        <h5 id="comisionMuestra" class="text-danger">$0.00</h5>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-success">Confirmar Transferencia</button>
-                            <a href="/Principal/" class="btn btn-secondary">Cancelar</a>
+                            <button type="submit" class="btn btn-success btn-lg">
+                                ✓ Confirmar Transferencia
+                            </button>
+                            <a href="/Principal/" class="btn btn-secondary btn-lg">
+                                ✕ Cancelar
+                            </a>
                         </div>
                     </form>
 
                     <hr>
 
                     <div class="alert alert-info">
-                        <strong>💡 Información:</strong>
+                        <strong>💡 Información importante:</strong>
                         <ul class="mb-0 mt-2">
                             <li>Verifica bien el número de cuenta destino</li>
                             <li>Las transferencias son inmediatas</li>
                             <li>Se requiere saldo disponible</li>
+                            <li>Se aplicará comisión según tipo de cuenta</li>
                         </ul>
                     </div>
                 </div>
@@ -50,3 +69,47 @@
         </div>
     </div>
 </div>
+
+<script>
+    function actualizarMontos() {
+        var monto = parseFloat(document.getElementById('monto').value) || 0;
+        var comision = (monto * 0.015); // 1.5% comisión
+
+        document.getElementById('montoMuestra').textContent = '$' + monto.toFixed(2);
+        document.getElementById('comisionMuestra').textContent = '$' + comision.toFixed(2);
+    }
+
+    document.getElementById('monto').addEventListener('input', actualizarMontos);
+
+    function validarTransferencia() {
+        var cuentaDestino = document.getElementById('cuentaDestino').value.trim();
+        var monto = parseFloat(document.getElementById('monto').value);
+        var errorCuenta = document.getElementById('errorCuenta');
+        var errorMonto = document.getElementById('errorMonto');
+
+        errorCuenta.style.display = 'none';
+        errorMonto.style.display = 'none';
+
+        // Validar número de cuenta
+        if (!cuentaDestino || cuentaDestino.length !== 12) {
+            errorCuenta.textContent = '❌ El número de cuenta debe tener 12 dígitos';
+            errorCuenta.style.display = 'block';
+            return false;
+        }
+
+        if (!/^\d+$/.test(cuentaDestino)) {
+            errorCuenta.textContent = '❌ El número de cuenta solo debe contener dígitos';
+            errorCuenta.style.display = 'block';
+            return false;
+        }
+
+        // Validar monto
+        if (monto < 5) {
+            errorMonto.textContent = '❌ El monto mínimo es $5.00';
+            errorMonto.style.display = 'block';
+            return false;
+        }
+
+        return true;
+    }
+</script>

@@ -1,0 +1,119 @@
+@{
+    ViewData["Title"] = "Cambiar PIN";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card shadow-lg">
+                <div class="card-header bg-danger text-white">
+                    <h4 class="mb-0">🔐 CAMBIAR PIN</h4>
+                </div>
+
+                <div class="card-body p-4">
+                    @if (TempData["Error"] != null)
+                    {
+                        <div class="alert alert-danger">
+                            ⚠️ @TempData["Error"]
+                        </div>
+                    }
+
+                    @if (TempData["Mensaje"] != null)
+                    {
+                        <div class="alert alert-success">
+                            ✅ @TempData["Mensaje"]
+                        </div>
+                    }
+
+                    <div class="alert alert-info">
+                        <strong>💡 Información importante:</strong>
+                        <ul class="mb-0 mt-2">
+                            <li>El PIN debe tener 4 dígitos</li>
+                            <li>Elige un número fácil de recordar pero seguro</li>
+                            <li>No uses secuencias obvias (1234, 0000, etc.)</li>
+                        </ul>
+                    </div>
+
+                    <form method="post" action="/Principal/CambiarPIN" onsubmit="return validarPIN()">
+                        <div class="form-group">
+                            <label for="pinActual" class="form-label"><strong>PIN Actual</strong></label>
+                            <input type="password" class="form-control form-control-lg" id="pinActual" name="pinActual" 
+                                   placeholder="Ingresa tu PIN actual" required maxlength="4">
+                            <small class="form-text text-muted">Para confirmar tu identidad</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="pinNuevo" class="form-label"><strong>PIN Nuevo</strong></label>
+                            <input type="password" class="form-control form-control-lg" id="pinNuevo" name="pinNuevo" 
+                                   placeholder="Ingresa tu nuevo PIN" required maxlength="4">
+                            <small class="form-text text-muted">4 dígitos</small>
+                            <div id="errorPin" class="alert alert-danger mt-2" style="display:none;"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="pinConfirmar" class="form-label"><strong>Confirmar PIN Nuevo</strong></label>
+                            <input type="password" class="form-control form-control-lg" id="pinConfirmar" name="pinConfirmar" 
+                                   placeholder="Confirma tu nuevo PIN" required maxlength="4">
+                            <small class="form-text text-muted">Debe coincidir con el anterior</small>
+                            <div id="errorConfirmar" class="alert alert-danger mt-2" style="display:none;"></div>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-danger btn-lg">
+                                ✓ Cambiar PIN
+                            </button>
+                            <a href="/Principal/" class="btn btn-secondary btn-lg">
+                                ✕ Cancelar
+                            </a>
+                        </div>
+                    </form>
+
+                    <hr class="my-4">
+
+                    <div class="alert alert-warning">
+                        <small>
+                            <strong>⚠️ Seguridad:</strong> Por tu seguridad, recuerda tu nuevo PIN. 
+                            No lo compartas con nadie. El banco nunca te pedirá tu PIN por teléfono o correo.
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function validarPIN() {
+        var pinActual = document.getElementById('pinActual').value;
+        var pinNuevo = document.getElementById('pinNuevo').value;
+        var pinConfirmar = document.getElementById('pinConfirmar').value;
+        var errorPin = document.getElementById('errorPin');
+        var errorConfirmar = document.getElementById('errorConfirmar');
+
+        errorPin.style.display = 'none';
+        errorConfirmar.style.display = 'none';
+
+        // Validar PIN nuevo
+        if (pinNuevo.length !== 4 || !/^\d+$/.test(pinNuevo)) {
+            errorPin.textContent = '❌ El PIN debe tener exactamente 4 dígitos numéricos';
+            errorPin.style.display = 'block';
+            return false;
+        }
+
+        // Validar que coincidan
+        if (pinNuevo !== pinConfirmar) {
+            errorConfirmar.textContent = '❌ Los PINs no coinciden';
+            errorConfirmar.style.display = 'block';
+            return false;
+        }
+
+        // Validar que no sean iguales
+        if (pinActual === pinNuevo) {
+            errorPin.textContent = '❌ El nuevo PIN no puede ser igual al actual';
+            errorPin.style.display = 'block';
+            return false;
+        }
+
+        return true;
+    }
+</script>

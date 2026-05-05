@@ -169,15 +169,20 @@
 
                 <!-- Botones -->
                 <div class="card-footer bg-light p-3">
-                    <div class="row">
-                        <div class="col-6">
-                            <button class="btn btn-primary btn-sm btn-block" onclick="imprimirComprobante()">
+                    <div class="row g-2">
+                        <div class="col-md-4">
+                            <button class="btn btn-primary btn-sm w-100" onclick="imprimirComprobante()">
                                 🖨️ Imprimir
                             </button>
                         </div>
-                        <div class="col-6">
-                            <a href="/Principal/" class="btn btn-secondary btn-sm btn-block">
-                                ✓ Aceptar
+                        <div class="col-md-4">
+                            <button class="btn btn-info btn-sm w-100" onclick="descargarComprobante()">
+                                📥 Descargar
+                            </button>
+                        </div>
+                        <div class="col-md-4">
+                            <a href="/Principal/" class="btn btn-success btn-sm w-100">
+                                ✓ Finalizar
                             </a>
                         </div>
                     </div>
@@ -223,13 +228,43 @@
     function imprimirComprobante() {
         var contenido = document.getElementById('comprobante').innerHTML;
         var ventana = window.open('', '', 'height=600,width=500');
-        ventana.document.write('<html><head><title>Comprobante</title>');
+        ventana.document.write('<html><head><title>Comprobante - BANCO NEW SMART CAPITAL</title>');
         ventana.document.write('<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">');
-        ventana.document.write('<style>body { font-family: "Courier New", monospace; }</style>');
+        ventana.document.write('<style>body { font-family: "Courier New", monospace; padding: 20px; }</style>');
         ventana.document.write('</head><body>');
         ventana.document.write(contenido);
         ventana.document.write('</body></html>');
         ventana.document.close();
         ventana.print();
+    }
+
+    function descargarComprobante() {
+        var contenido = document.getElementById('comprobante').innerHTML;
+        var html = '<!DOCTYPE html>';
+        html += '<html lang="es">';
+        html += '<head>';
+        html += '<meta charset="UTF-8">';
+        html += '<title>Comprobante - BANCO NEW SMART CAPITAL</title>';
+        html += '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">';
+        html += '<style>';
+        html += 'body { font-family: "Courier New", monospace; padding: 40px; background: #f5f5f5; }';
+        html += '.container { max-width: 600px; background: white; border-radius: 10px; padding: 30px; box-shadow: 0 0 20px rgba(0,0,0,0.1); }';
+        html += 'hr { border-top: 1px dashed #ccc; }';
+        html += '</style>';
+        html += '</head>';
+        html += '<body>';
+        html += '<div class="container">' + contenido + '</div>';
+        html += '</body>';
+        html += '</html>';
+
+        var blob = new Blob([html], { type: 'text/html' });
+        var url = window.URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = url;
+        a.download = 'Comprobante_' + new Date().getTime() + '.html';
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
     }
 </script>

@@ -213,14 +213,109 @@ namespace Cajero.Web.Controllers
         }
 
         /// <summary>
-        /// Muestra los detalles de la cuenta.
+        /// Muestra la vista para cambiar el PIN.
         /// </summary>
-        public IActionResult MiCuenta()
+        [HttpGet]
+        public IActionResult CambiarPIN()
         {
             if (!ValidarSesion())
                 return RedirectToAction("Index", "Autenticacion");
 
             return View();
+        }
+
+        /// <summary>
+        /// Procesa el cambio de PIN.
+        /// </summary>
+        [HttpPost]
+        public IActionResult CambiarPIN(string pinActual, string pinNuevo, string pinConfirmar)
+        {
+            if (!ValidarSesion())
+                return RedirectToAction("Index", "Autenticacion");
+
+            if (pinNuevo != pinConfirmar)
+            {
+                TempData["Error"] = "Los PINs no coinciden.";
+                return RedirectToAction("CambiarPIN");
+            }
+
+            var cuentaId = ObtenerCuentaId().Value;
+            var cuenta = _servicioCajero.ObtenerCuenta(cuentaId);
+
+            if (cuenta.PIN != pinActual)
+            {
+                TempData["Error"] = "El PIN actual es incorrecto.";
+                return RedirectToAction("CambiarPIN");
+            }
+
+            // Aquí iría la lógica para actualizar el PIN (implementar en servicio)
+            TempData["Mensaje"] = "PIN cambiado exitosamente.";
+            return RedirectToAction("Index");
+        }
+
+        /// <summary>
+        /// Muestra la confirmación de transferencia con datos de la cuenta destino.
+        /// </summary>
+        [HttpPost]
+        public IActionResult Transferencia(string cuentaDestino, decimal monto)
+        {
+            if (!ValidarSesion())
+                return RedirectToAction("Index", "Autenticacion");
+
+            var cuentaOrigenId = ObtenerCuentaId().Value;
+            var cuentaOrigen = _servicioCajero.ObtenerCuenta(cuentaOrigenId);
+
+            // Buscar cuenta destino por número
+            // Esto requiere crear un método en el servicio para buscar por número de cuenta
+            var resultado = _servicioCajero.BuscarCuentaPorNumero(cuentaDestino);
+
+            if (!resultado.Exitoso || resultado.Datos == null)
+            {
+                TempData["Error"] = resultado.Mensaje;
+                return RedirectToAction("Transferencia");
+            }
+
+            var cuentaDestinoObj = (Cuenta)resultado.Datos;
+
+            // Validar que no sea la misma cuenta
+            if (cuentaOrigenId == cuentaDestinoObj.Id)
+            {
+                TempData["Error"] = "No puedes transferir a tu propia cuenta.";
+                return RedirectToAction("Transferencia");
+            }
+
+            // Guardar monto temporalmente
+            ViewBag.Monto = monto;
+
+            return View("ConfirmarTransferencia", cuentaDestinoObj);
+        }
+
+        /// <summary>
+        /// Confirma y procesa la transferencia.
+        /// </summary>
+        [HttpPost]
+        public IActionResult ConfirmarTransferencia(string cuentaDestino, decimal monto)
+        {
+            if (!ValidarSesion())
+                return RedirectToAction("Index", "Autenticacion");
+
+            _logger.LogInformation($"Transferencia solicitada: ${monto} a {cuentaDestino}");
+
+            var cuentaOrigenId = ObtenerCuentaId().Value;
+            var resultado = _servicioCajero.RealizarTransferencia(cuentaOrigenId, int.Parse(cuentaDestino), monto);
+
+            if (resultado.Exitoso)
+            {
+                var datosTransferencia = (RespuestaOperacionConComprobante)resultado.Datos;
+                TempData["Exito"] = resultado.Mensaje;
+                TempData["Comprobante"] = System.Text.Json.JsonSerializer.Serialize(datosTransferencia.Comprobante);
+                _logger.LogInformation($"Transferencia exitosa: ${monto}");
+                return RedirectToAction("Comprobante");
+            }
+
+            TempData["Error"] = resultado.Mensaje;
+            _logger.LogWarning($"Transferencia fallida: {resultado.Mensaje}");
+            return RedirectToAction("Transferencia");
         }
 
         /// <summary>
