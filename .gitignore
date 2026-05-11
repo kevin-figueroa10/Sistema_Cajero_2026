@@ -19,3 +19,6 @@ publish/
 # Archivos del sistema
 .DS_Store
 Thumbs.db
+
+# Carpeta de referencias de Persona 2
+Persona2/
