@@ -5,7 +5,7 @@ namespace Cajero.Core.Models
     /// </summary>
     public class RespuestaAutenticacion
     {
-        public int CuentaId { get; set; }
+        public int cuentaId { get; set; }
         public string NumeroCuenta { get; set; } = string.Empty;
         public string Propietario { get; set; } = string.Empty;
         public TipoCuenta TipoCuenta { get; set; }
