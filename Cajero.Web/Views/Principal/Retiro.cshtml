@@ -1,0 +1,130 @@
+@{
+    ViewData["Title"] = "Realizar Retiro";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card shadow-lg">
+                <div class="card-header bg-danger text-white">
+                    <h4 class="mb-0">📤 REALIZAR RETIRO</h4>
+                </div>
+
+                <div class="card-body p-4">
+                    <!-- Información de límites -->
+                    <div class="alert alert-warning" role="alert">
+                        <strong>⚠️ Límites de Retiro (BANCO NEW SMART CAPITAL):</strong><br>
+                        <small>
+                            • Monto máximo por transacción: <strong>$1,000</strong><br>
+                            • Límite diario: <strong>$3,000</strong>
+                        </small>
+                    </div>
+
+                    <form method="post" action="/Principal/Retiro" id="formRetiro" onsubmit="return validarRetiro()">
+                        <div class="form-group">
+                            <label for="monto" class="form-label"><strong>Monto a Retirar ($)</strong></label>
+                            <input type="number" class="form-control form-control-lg" id="monto" name="monto" 
+                                   step="1" min="5" max="1000" placeholder="0.00" required autofocus>
+                            <small class="form-text text-muted">Ingresa un monto en múltiplos de $5 (máximo $1,000)</small>
+                            <div id="errorMensaje" class="alert alert-danger mt-2" style="display:none;"></div>
+                        </div>
+
+                        <!-- Monto a retirar resumen -->
+                        <div class="card mb-3" style="background-color: #f8f9fa;">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <p class="mb-1 text-muted"><small>Monto a Retirar:</small></p>
+                                        <h5 id="montoMuestra" class="text-danger">$0.00</h5>
+                                    </div>
+                                    <div class="col-6 text-right">
+                                        <p class="mb-1 text-muted"><small>Comisión:</small></p>
+                                        <h5 class="text-success">$0.00</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-danger btn-lg">
+                                💸 Confirmar Retiro
+                            </button>
+                            <a href="/Principal/" class="btn btn-secondary btn-lg">
+                                ❌ Cancelar
+                            </a>
+                        </div>
+                    </form>
+
+                    <hr>
+
+                    <!-- Montos rápidos -->
+                    <div class="alert alert-info">
+                        <strong>💡 Montos rápidos:</strong>
+                        <div class="mt-3">
+                            <button type="button" class="btn btn-sm btn-outline-info m-2" onclick="setMonto(50)">$50</button>
+                            <button type="button" class="btn btn-sm btn-outline-info m-2" onclick="setMonto(100)">$100</button>
+                            <button type="button" class="btn btn-sm btn-outline-info m-2" onclick="setMonto(200)">$200</button>
+                            <button type="button" class="btn btn-sm btn-outline-info m-2" onclick="setMonto(500)">$500</button>
+                        </div>
+                    </div>
+
+                    <!-- Información de seguridad -->
+                    <div class="alert alert-success" role="alert">
+                        <small>
+                            🔒 <strong>Transacción Segura:</strong> Tu dinero está protegido con encriptación de grado bancario
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .form-control:focus {
+        border-color: #dc3545;
+        box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+    }
+
+    .btn-danger:hover {
+        background-color: #c82333;
+        border-color: #bd2130;
+    }
+</style>
+
+<script>
+    function setMonto(cantidad) {
+        document.getElementById('monto').value = cantidad;
+        actualizarMuestra();
+    }
+
+    function actualizarMuestra() {
+        var monto = parseFloat(document.getElementById('monto').value) || 0;
+        document.getElementById('montoMuestra').textContent = '$' + monto.toFixed(2);
+    }
+
+    document.getElementById('monto').addEventListener('input', actualizarMuestra);
+
+    function validarRetiro() {
+        var monto = parseFloat(document.getElementById('monto').value);
+        var errorDiv = document.getElementById('errorMensaje');
+        var multiplos = [5, 10, 20, 50, 100];
+
+        // Validar que sea múltiplo de 5
+        if (monto % 5 !== 0) {
+            errorDiv.textContent = '❌ El monto debe ser múltiplo de $5';
+            errorDiv.style.display = 'block';
+            return false;
+        }
+
+        // Validar límite por transacción (ahora $1,000)
+        if (monto > 1000) {
+            errorDiv.textContent = '❌ El límite máximo por transacción es $1,000';
+            errorDiv.style.display = 'block';
+            return false;
+        }
+
+        errorDiv.style.display = 'none';
+        return true;
+    }
+</script>

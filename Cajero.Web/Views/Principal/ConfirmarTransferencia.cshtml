@@ -1,0 +1,99 @@
+@model Cajero.Core.Models.Cuenta
+
+@{
+    ViewData["Title"] = "Confirmar Transferencia";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card shadow-lg">
+                <div class="card-header bg-warning text-white">
+                    <h4 class="mb-0">⚠️ CONFIRMAR TRANSFERENCIA</h4>
+                </div>
+
+                <div class="card-body p-4">
+                    <div class="alert alert-info">
+                        <h5>Verifica los datos antes de continuar:</h5>
+                    </div>
+
+                    <!-- Cuenta Destino -->
+                    <div class="card mb-3" style="background-color: #e7f3ff; border: 2px solid #2196F3;">
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label class="text-muted"><small>CUENTA DESTINO</small></label>
+                                <p style="font-size: 20px; font-weight: bold; margin: 0;">@Model.NumeroCuenta</p>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="text-muted"><small>TITULAR</small></label>
+                                <p style="font-size: 18px; font-weight: bold; margin: 0; color: #2196F3;">
+                                    @Model.Propietario.ToUpper()
+                                </p>
+                            </div>
+
+                            <div>
+                                <label class="text-muted"><small>TIPO DE CUENTA</small></label>
+                                <p style="font-size: 14px; margin: 0;">
+                                    <span class="badge badge-primary">@Model.TipoCuenta</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Monto -->
+                    <div class="card mb-3" style="background-color: #f0f8e7; border: 2px solid #4CAF50;">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-6">
+                                    <label class="text-muted"><small>MONTO A TRANSFERIR</small></label>
+                                    <p id="montoDisplay" style="font-size: 24px; font-weight: bold; margin: 0; color: #4CAF50;">
+                                        $@ViewBag.Monto.ToString("N2")
+                                    </p>
+                                </div>
+                                <div class="col-6 text-right">
+                                    <label class="text-muted"><small>COMISIÓN (1.5%)</small></label>
+                                    <p id="comisionDisplay" style="font-size: 20px; font-weight: bold; margin: 0; color: #f44336;">
+                                        $@(((decimal)ViewBag.Monto * 0.015m).ToString("N2"))
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Total -->
+                    <div class="alert alert-dark">
+                        <h5>Total a descontar de tu cuenta:</h5>
+                        <p style="font-size: 28px; font-weight: bold; color: #dc3545; margin: 0;">
+                            $@(((decimal)ViewBag.Monto * 1.015m).ToString("N2"))
+                        </p>
+                    </div>
+
+                    <!-- Formulario oculto para procesar -->
+                    <form method="post" action="/Principal/ConfirmarTransferencia" id="formConfirmar">
+                        <input type="hidden" name="cuentaDestino" value="@Model.NumeroCuenta">
+                        <input type="hidden" name="monto" value="@ViewBag.Monto">
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-success btn-lg">
+                                ✓ CONFIRMAR TRANSFERENCIA
+                            </button>
+                            <a href="/Principal/" class="btn btn-secondary btn-lg">
+                                ✕ Cancelar
+                            </a>
+                        </div>
+                    </form>
+
+                    <hr class="my-4">
+
+                    <div class="alert alert-warning">
+                        <small>
+                            <strong>⚠️ Advertencia:</strong> Una vez confirmada, la transferencia no se puede cancelar. 
+                            Asegúrate que todos los datos sean correctos.
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

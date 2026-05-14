@@ -1,0 +1,65 @@
+@{
+    ViewData["Title"] = "Menú Principal";
+}
+
+<div class="container">
+    <!-- Header del Banco -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="alert alert-primary text-center py-3">
+                <h2 class="mb-0">🏦 BANCO NEW SMART CAPITAL</h2>
+                <p class="mb-0 small">Sistema Cajero Automático 2026</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <h1 class="mb-2">Bienvenido, @Context.Session.GetString("Propietario")</h1>
+            <p class="text-muted">
+                Tipo de Cuenta: 
+                <span class="badge badge-info">
+                    @(Context.Session.GetString("TipoCuenta") ?? "Ahorro")
+                </span>
+            </p>
+            <p class="text-muted">Selecciona la operación que deseas realizar</p>
+        </div>
+    </div>
+
+    <div class="menu-grid">
+        <a href="/Principal/ConsultarSaldo" class="menu-item">
+            <div class="menu-item-icon">💰</div>
+            <div class="menu-item-title">Consultar Saldo</div>
+        </a>
+
+        <a href="/Principal/Deposito" class="menu-item">
+            <div class="menu-item-icon">📥</div>
+            <div class="menu-item-title">Realizar Depósito</div>
+        </a>
+
+        <a href="/Principal/Retiro" class="menu-item">
+            <div class="menu-item-icon">📤</div>
+            <div class="menu-item-title">Realizar Retiro</div>
+        </a>
+
+        <a href="/Principal/Transferencia" class="menu-item">
+            <div class="menu-item-icon">💸</div>
+            <div class="menu-item-title">Transferencia</div>
+        </a>
+
+        <a href="/Principal/Historial" class="menu-item">
+            <div class="menu-item-icon">📋</div>
+            <div class="menu-item-title">Historial</div>
+        </a>
+
+        <a href="/Principal/MiCuenta" class="menu-item">
+            <div class="menu-item-icon">🪪</div>
+            <div class="menu-item-title">Mi Cuenta</div>
+        </a>
+
+        <a href="/Principal/CambiarPIN" class="menu-item">
+            <div class="menu-item-icon">🔐</div>
+            <div class="menu-item-title">Cambiar PIN</div>
+        </a>
+    </div>
+</div>

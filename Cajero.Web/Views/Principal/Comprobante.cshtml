@@ -1,0 +1,270 @@
+@using Cajero.Core.Models
+
+@model Comprobante
+
+@{
+    ViewData["Title"] = "Comprobante de Transacción";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <!-- Comprobante -->
+            <div class="card shadow-lg" id="comprobante">
+                <!-- Header Banco -->
+                <div class="card-header bg-primary text-white text-center py-4">
+                    <h2 class="mb-0">🏦 BANCO NEW SMART CAPITAL</h2>
+                    <p class="mb-0 small">Sistema Cajero Automático 2026</p>
+                </div>
+
+                <div class="card-body p-4" style="font-family: 'Courier New', monospace; font-size: 13px;">
+                    <!-- Tipo de Operación -->
+                    <div class="text-center mb-4">
+                        <h4 class="text-success font-weight-bold">
+                            @if (Model.TipoOperacion == "RETIRO")
+                            {
+                                <span>💸 COMPROBANTE DE RETIRO</span>
+                            }
+                            else if (Model.TipoOperacion == "DEPOSITO")
+                            {
+                                <span>💰 COMPROBANTE DE DEPÓSITO</span>
+                            }
+                            else if (Model.TipoOperacion == "TRANSFERENCIA")
+                            {
+                                <span>🔄 COMPROBANTE DE TRANSFERENCIA</span>
+                            }
+                        </h4>
+                    </div>
+
+                    <hr />
+
+                    <!-- Número de Referencia -->
+                    <div class="row mb-3">
+                        <div class="col-6">
+                            <strong>Referencia:</strong>
+                        </div>
+                        <div class="col-6 text-right">
+                            <span class="badge badge-info p-2">@Model.NumeroReferencia</span>
+                        </div>
+                    </div>
+
+                    <!-- Fecha y Hora -->
+                    <div class="row mb-2">
+                        <div class="col-6">
+                            <strong>Fecha:</strong>
+                        </div>
+                        <div class="col-6 text-right">
+                            @Model.Fecha.ToString("dd/MM/yyyy")
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-6">
+                            <strong>Hora:</strong>
+                        </div>
+                        <div class="col-6 text-right">
+                            @Model.Hora
+                        </div>
+                    </div>
+
+                    <hr />
+
+                    <!-- Información del Titular -->
+                    <div class="mb-3">
+                        <p class="mb-1"><strong>Titular:</strong></p>
+                        <p class="ml-2">@Model.Titular</p>
+                    </div>
+
+                    <div class="mb-3">
+                        <p class="mb-1"><strong>Número de Cuenta:</strong></p>
+                        <p class="ml-2">@Model.NumeroCuenta</p>
+                    </div>
+
+                    <hr />
+
+                    <!-- Detalles de la Operación -->
+                    <div class="mb-3 p-2" style="background-color: #f8f9fa; border-radius: 5px;">
+                        <div class="row mb-2">
+                            <div class="col-6">
+                                <strong>Monto:</strong>
+                            </div>
+                            <div class="col-6 text-right text-success">
+                                <strong>$@Model.Monto.ToString("N2")</strong>
+                            </div>
+                        </div>
+
+                        @if (Model.Comision > 0)
+                        {
+                            <div class="row">
+                                <div class="col-6">
+                                    <small>Comisión:</small>
+                                </div>
+                                <div class="col-6 text-right">
+                                    <small class="text-danger">-$@Model.Comision.ToString("N2")</small>
+                                </div>
+                            </div>
+                        }
+                    </div>
+
+                    <!-- Información de Transferencia -->
+                    @if (!string.IsNullOrEmpty(Model.CuentaDestino))
+                    {
+                        <div class="alert alert-info p-2">
+                            <strong>Transferencia a Cuenta:</strong><br />
+                            @Model.CuentaDestino
+                        </div>
+                    }
+
+                    <hr />
+
+                    <!-- Saldos -->
+                    <div class="row mb-2">
+                        <div class="col-6">
+                            <strong>Saldo Anterior:</strong>
+                        </div>
+                        <div class="col-6 text-right">
+                            $@Model.SaldoAnterior.ToString("N2")
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-6">
+                            <strong>Saldo Nuevo:</strong>
+                        </div>
+                        <div class="col-6 text-right text-primary">
+                            <strong>$@Model.SaldoNuevo.ToString("N2")</strong>
+                        </div>
+                    </div>
+
+                    <hr />
+
+                    <!-- Estado -->
+                    <div class="text-center">
+                        @if (Model.Estado == "EXITOSO")
+                        {
+                            <span class="badge badge-success p-2" style="font-size: 12px;">
+                                ✅ OPERACIÓN EXITOSA
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="badge badge-danger p-2" style="font-size: 12px;">
+                                ❌ OPERACIÓN FALLIDA
+                            </span>
+                        }
+                    </div>
+
+                    <hr />
+
+                    <!-- Descripción -->
+                    <div class="text-center small text-muted">
+                        <p class="mb-0">@Model.Descripcion</p>
+                    </div>
+
+                    <div class="text-center small text-muted mt-3">
+                        <p class="mb-0">Conserve este comprobante como constancia de su operación</p>
+                        <p class="mb-0">Transacción segura encriptada</p>
+                    </div>
+                </div>
+
+                <!-- Botones -->
+                <div class="card-footer bg-light p-3">
+                    <div class="row g-2">
+                        <div class="col-md-4">
+                            <button class="btn btn-primary btn-sm w-100" onclick="imprimirComprobante()">
+                                🖨️ Imprimir
+                            </button>
+                        </div>
+                        <div class="col-md-4">
+                            <button class="btn btn-info btn-sm w-100" onclick="descargarComprobante()">
+                                📥 Descargar
+                            </button>
+                        </div>
+                        <div class="col-md-4">
+                            <a href="/Principal/" class="btn btn-success btn-sm w-100">
+                                ✓ Finalizar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        border: 2px solid #007bff;
+    }
+
+    #comprobante {
+        max-width: 400px;
+        margin-top: 20px;
+    }
+
+    .badge-info {
+        background-color: #17a2b8 !important;
+        color: white !important;
+    }
+
+    .badge-success {
+        background-color: #28a745 !important;
+        color: white !important;
+    }
+
+    .badge-danger {
+        background-color: #dc3545 !important;
+        color: white !important;
+    }
+
+    hr {
+        margin: 15px 0;
+        border: none;
+        border-top: 1px dashed #ccc;
+    }
+</style>
+
+<script>
+    function imprimirComprobante() {
+        var contenido = document.getElementById('comprobante').innerHTML;
+        var ventana = window.open('', '', 'height=600,width=500');
+        ventana.document.write('<html><head><title>Comprobante - BANCO NEW SMART CAPITAL</title>');
+        ventana.document.write('<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">');
+        ventana.document.write('<style>body { font-family: "Courier New", monospace; padding: 20px; }</style>');
+        ventana.document.write('</head><body>');
+        ventana.document.write(contenido);
+        ventana.document.write('</body></html>');
+        ventana.document.close();
+        ventana.print();
+    }
+
+    function descargarComprobante() {
+        var contenido = document.getElementById('comprobante').innerHTML;
+        var html = '<!DOCTYPE html>';
+        html += '<html lang="es">';
+        html += '<head>';
+        html += '<meta charset="UTF-8">';
+        html += '<title>Comprobante - BANCO NEW SMART CAPITAL</title>';
+        html += '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">';
+        html += '<style>';
+        html += 'body { font-family: "Courier New", monospace; padding: 40px; background: #f5f5f5; }';
+        html += '.container { max-width: 600px; background: white; border-radius: 10px; padding: 30px; box-shadow: 0 0 20px rgba(0,0,0,0.1); }';
+        html += 'hr { border-top: 1px dashed #ccc; }';
+        html += '</style>';
+        html += '</head>';
+        html += '<body>';
+        html += '<div class="container">' + contenido + '</div>';
+        html += '</body>';
+        html += '</html>';
+
+        var blob = new Blob([html], { type: 'text/html' });
+        var url = window.URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = url;
+        a.download = 'Comprobante_' + new Date().getTime() + '.html';
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+    }
+</script>
