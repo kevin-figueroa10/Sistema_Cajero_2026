@@ -1,0 +1,114 @@
+﻿@{
+    ViewData["Title"] = "Login - BANCO NEW SMART CAPITAL";
+    Layout = null; // Sin layout para login
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); height: 100vh; display: flex; align-items: center;">
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-5">
+                <!-- Tarjeta de Login -->
+                <div class="card shadow-lg" style="border: none; border-radius: 15px;">
+
+                    <!-- Header -->
+                    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 40px; text-align: center; border-radius: 15px 15px 0 0;">
+                        <h1 style="font-size: 48px; margin: 0;">🏦</h1>
+                        <h2 style="margin: 15px 0 5px; font-size: 22px;">BANCO NEW SMART CAPITAL</h2>
+                        <p style="margin: 0; font-size: 14px; opacity: 0.9;">Sistema Cajero Automático 2026</p>
+                    </div>
+
+                    <!-- Body -->
+                    <div class="card-body p-4">
+
+                        <!-- Mensaje de error -->
+                        @if (ViewData["Error"] != null)
+                        {
+                            <div class="alert alert-danger alert-dismissible fade show">
+                                ❌ @ViewData["Error"]
+                                <button type="button" class="close" data-dismiss="alert">
+                                    <span>&times;</span>
+                                </button>
+                            </div>
+                        }
+
+                        <!-- Formulario -->
+                        <form method="post" onsubmit="return validarLogin()">
+                            <div class="form-group">
+                                <label for="numeroCuenta" class="font-weight-bold">
+                                    💳 Número de Cuenta
+                                </label>
+                                <input type="text" id="numeroCuenta" name="numeroCuenta"
+                                       class="form-control form-control-lg"
+                                       placeholder="412087654321"
+                                       maxlength="12"
+                                       required
+                                       autofocus>
+                                <small class="text-muted">12 dígitos</small>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="pin" class="font-weight-bold">
+                                    🔐 PIN
+                                </label>
+                                <input type="password" id="pin" name="pin"
+                                       class="form-control form-control-lg"
+                                       placeholder="••••"
+                                       maxlength="4"
+                                       required>
+                                <small class="text-muted">4 dígitos</small>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary btn-lg btn-block mt-4">
+                                🔓 Iniciar Sesión
+                            </button>
+                        </form>
+
+                        <hr class="my-4">
+
+                        <!-- Información de prueba -->
+                        <div class="alert alert-info small">
+                            <strong>📋 Cuentas de Prueba:</strong>
+                            <ul class="mb-0 mt-2" style="font-size: 12px;">
+                                <li><strong>Juan:</strong> 412087654321 / 8475</li>
+                                <li><strong>María:</strong> 412087654322 / 5829</li>
+                                <li><strong>Carlos:</strong> 412087654323 / 9403</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function validarLogin() {
+            var numeroCuenta = document.getElementById('numeroCuenta').value.trim();
+            var pin = document.getElementById('pin').value;
+
+            if (numeroCuenta.length !== 12 || !/^\d+$/.test(numeroCuenta)) {
+                alert('❌ El número de cuenta debe tener 12 dígitos.');
+                return false;
+            }
+
+            if (pin.length !== 4 || !/^\d+$/.test(pin)) {
+                alert('❌ El PIN debe tener 4 dígitos.');
+                return false;
+            }
+
+            return true;
+        }
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

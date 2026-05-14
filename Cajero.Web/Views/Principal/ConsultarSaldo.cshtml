@@ -1,0 +1,58 @@
+﻿@{
+    ViewData["Title"] = "Consultar Saldo";
+    var saldo = ViewData["Saldo"] as RespuestaSaldo;
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card shadow-lg">
+                <div class="card-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                    <h4 class="mb-0">💰 CONSULTAR SALDO</h4>
+                </div>
+
+                <div class="card-body p-5">
+                    @if (saldo != null)
+                    {
+                        <!-- Información de la cuenta -->
+                        <div class="alert alert-info">
+                            <strong>Cuenta:</strong> @saldo.NumeroCuenta<br>
+                            <strong>Titular:</strong> @saldo.Propietario
+                        </div>
+
+                        <!-- Saldo en grande -->
+                        <div class="text-center mb-4">
+                            <h5 class="text-muted">Saldo Actual</h5>
+                            <h2 class="text-success" style="font-size: 48px; font-weight: bold;">
+                                $@saldo.Saldo.ToString("N2")
+                            </h2>
+                        </div>
+
+                        <!-- Información útil -->
+                        <div class="alert alert-info">
+                            <h6 class="mb-3">📋 Límites de tu Cuenta:</h6>
+                            <ul class="mb-0" style="font-size: 14px;">
+                                <li><strong>Máximo por Retiro:</strong> $1,000</li>
+                                <li><strong>Límite Diario:</strong> $3,000</li>
+                                <li><strong>Múltiplos de:</strong> $5</li>
+                            </ul>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-warning">
+                            No se pudo obtener la información del saldo.
+                        </div>
+                    }
+
+                    <!-- Botones -->
+                    <div class="d-grid gap-2 mt-4">
+                        <a href="/Principal/" class="btn btn-primary btn-lg">
+                            ← Volver al Menú
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

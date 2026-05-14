@@ -1,0 +1,62 @@
+﻿@{
+    ViewData["Title"] = "Historial de Transacciones";
+    var transacciones = ViewData["Transacciones"] as List<Cajero.Core.Models.Transaccion>;
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card shadow-lg">
+                <div class="card-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                    <h4 class="mb-0">📋 HISTORIAL DE TRANSACCIONES</h4>
+                </div>
+
+                <div class="card-body p-4">
+                    @if (transacciones != null && transacciones.Count > 0)
+                    {
+                        <!-- Tabla de transacciones -->
+                        <div class="table-responsive">
+                            <table class="table table-hover table-striped">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>📅 Fecha</th>
+                                        <th>⏰ Hora</th>
+                                        <th>📝 Tipo</th>
+                                        <th>💵 Monto</th>
+                                        <th>💰 Saldo</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var transaccion in transacciones.OrderByDescending(t => t.Fecha))
+                                    {
+                                        <tr>
+                                            <td>@transaccion.Fecha.ToString("dd/MM/yyyy")</td>
+                                            <td>@transaccion.Fecha.ToString("HH:mm:ss")</td>
+                                            <td>@transaccion.Tipo</td>
+                                            <td class="font-weight-bold">$@transaccion.Monto.ToString("N2")</td>
+                                            <td>$@transaccion.SaldoNuevo.ToString("N2")</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-info text-center py-5">
+                            <h5>📋 No hay transacciones registradas</h5>
+                            <p class="mb-0">Aún no tienes movimientos en tu cuenta.</p>
+                        </div>
+                    }
+
+                    <!-- Botón de regreso -->
+                    <div class="d-grid gap-2 mt-4">
+                        <a href="/Principal/" class="btn btn-primary btn-lg">
+                            ← Volver al Menú
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,95 @@
+﻿@{
+    ViewData["Title"] = "Realizar Retiro";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card shadow-lg">
+                <div class="card-header bg-danger text-white">
+                    <h4 class="mb-0">📤 REALIZAR RETIRO</h4>
+                </div>
+
+                <div class="card-body p-4">
+                    @if (TempData["Error"] != null)
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show">
+                            ❌ @TempData["Error"]
+                            <button type="button" class="close" data-dismiss="alert">
+                                <span>&times;</span>
+                            </button>
+                        </div>
+                    }
+
+                    <form method="post" onsubmit="return validarRetiro()">
+                        <div class="form-group">
+                            <label for="monto" class="font-weight-bold">
+                                💵 Monto a Retirar
+                            </label>
+                            <div class="input-group input-group-lg">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">$</span>
+                                </div>
+                                <input type="number" class="form-control" id="monto" name="monto"
+                                       step="5" min="5" placeholder="0.00" required>
+                            </div>
+                            <small class="form-text text-muted">
+                                ✓ Mínimo: $5 | Múltiplos de $5 | Máximo: $1,000
+                            </small>
+                            <div id="errorMonto" class="alert alert-danger mt-2" style="display:none;"></div>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-danger btn-lg">
+                                ✓ Confirmar Retiro
+                            </button>
+                            <a href="/Principal/" class="btn btn-secondary btn-lg">
+                                ✕ Cancelar
+                            </a>
+                        </div>
+                    </form>
+
+                    <hr class="my-4">
+
+                    <div class="alert alert-info small">
+                        <strong>📋 Información:</strong>
+                        <ul class="mb-0 mt-2">
+                            <li>El dinero se entregará en efectivo</li>
+                            <li>El retiro es inmediato</li>
+                            <li>No hay comisiones</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function validarRetiro() {
+        var monto = parseFloat(document.getElementById('monto').value);
+        var errorDiv = document.getElementById('errorMonto');
+
+        errorDiv.style.display = 'none';
+
+        if (monto < 5) {
+            errorDiv.textContent = '❌ El monto mínimo es $5';
+            errorDiv.style.display = 'block';
+            return false;
+        }
+
+        if (monto % 5 !== 0) {
+            errorDiv.textContent = '❌ El monto debe ser múltiplo de $5';
+            errorDiv.style.display = 'block';
+            return false;
+        }
+
+        if (monto > 1000) {
+            errorDiv.textContent = '❌ El monto máximo es $1,000';
+            errorDiv.style.display = 'block';
+            return false;
+        }
+
+        return true;
+    }
+</script>

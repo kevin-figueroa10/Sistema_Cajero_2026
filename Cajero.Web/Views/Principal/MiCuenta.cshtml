@@ -1,0 +1,135 @@
+﻿@model Cajero.Core.Models.Cuenta
+
+@{
+    ViewData["Title"] = "Mi Cuenta";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <!-- Tarjeta Visual -->
+            <div class="card shadow-lg mb-4" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 20px; border: none;">
+                <div class="card-body p-5">
+                    <!-- Header -->
+                    <div class="row mb-5">
+                        <div class="col-6">
+                            <h3 style="font-size: 24px; font-weight: bold;">🏦 BANCO NEW SMART CAPITAL</h3>
+                        </div>
+                        <div class="col-6 text-right">
+                            <h5 style="opacity: 0.8;">DEBIT CARD</h5>
+                        </div>
+                    </div>
+
+                    <!-- Número de Cuenta -->
+                    <div class="mb-5">
+                        <small style="opacity: 0.8;">NÚMERO DE CUENTA</small>
+                        <p style="font-size: 24px; font-weight: bold; letter-spacing: 2px; font-family: 'Courier New'; margin: 10px 0;">
+                            @Model.NumeroCuenta
+                        </p>
+                    </div>
+
+                    <!-- Titular y Fecha -->
+                    <div class="row">
+                        <div class="col-6">
+                            <small style="opacity: 0.8;">TITULAR</small>
+                            <p style="font-size: 16px; font-weight: bold; margin: 5px 0;">@Model.Propietario.ToUpper()</p>
+                        </div>
+                        <div class="col-6 text-right">
+                            <small style="opacity: 0.8;">VÁLIDA HASTA</small>
+                            <p style="font-size: 16px; font-weight: bold; margin: 5px 0;">@Model.FechaExpiracion.ToString("MM/yy")</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Información Detallada -->
+            <div class="card shadow-lg">
+                <div class="card-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                    <h4 class="mb-0">📋 Detalles de la Cuenta</h4>
+                </div>
+
+                <div class="card-body p-4">
+                    <!-- Tipo y Estado -->
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="detail-box">
+                                <label class="text-muted small">Tipo de Cuenta</label>
+                                <p class="value" style="font-size: 16px; font-weight: bold; margin: 5px 0;">
+                                    <span class="badge badge-info badge-lg" style="padding: 8px 12px; font-size: 13px;">
+                                        @Model.TipoCuenta
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="detail-box">
+                                <label class="text-muted small">Estado</label>
+                                <p class="value" style="font-size: 16px; font-weight: bold; margin: 5px 0;">
+                                    <span class="badge badge-success badge-lg" style="padding: 8px 12px; font-size: 13px;">
+                                        ✅ @(Model.Activa ? "Activa" : "Inactiva")
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Saldo -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <label class="text-muted small">Saldo Actual</label>
+                            <p style="color: #28a745; font-size: 32px; font-weight: bold; margin: 10px 0;">
+                                $@Model.Saldo.ToString("N2")
+                            </p>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <!-- Fechas -->
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <label class="text-muted small">Fecha de Creación</label>
+                            <p style="font-size: 16px; margin: 5px 0;">@Model.FechaCreacion.ToString("dd/MM/yyyy")</p>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="text-muted small">Fecha de Expiración</label>
+                            <p style="font-size: 16px; margin: 5px 0;">@Model.FechaExpiracion.ToString("dd/MM/yyyy")</p>
+                        </div>
+                    </div>
+
+                    <!-- PIN -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <label class="text-muted small">PIN</label>
+                            <p style="font-size: 16px; margin: 5px 0;">
+                                <code style="background: #f0f0f0; padding: 8px 12px; border-radius: 5px; font-size: 18px; letter-spacing: 2px;">
+                                    ••••
+                                </code>
+                            </p>
+                            <small class="text-muted">Por seguridad, tu PIN no se muestra</small>
+                        </div>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <!-- Límites -->
+                    <div class="alert alert-info">
+                        <h6 class="mb-3">💡 Límites de tu Cuenta:</h6>
+                        <ul class="mb-0" style="font-size: 14px;">
+                            <li><strong>Máximo por Retiro:</strong> $1,000</li>
+                            <li><strong>Límite Diario:</strong> $3,000</li>
+                            <li><strong>Múltiplos de:</strong> $5</li>
+                        </ul>
+                    </div>
+
+                    <!-- Botones -->
+                    <div class="d-grid gap-2 mt-4">
+                        <a href="/Principal/" class="btn btn-primary btn-lg">
+                            Volver al Menú
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
