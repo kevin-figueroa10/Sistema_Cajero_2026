@@ -1,4 +1,7 @@
 <Solution>
+  <Folder Name="/Cajero.Tests/">
+    <Project Path="Cajero.Tests/Cajero.tests.csproj" />
+  </Folder>
   <Project Path="Cajero.Consola/Cajero.Consola.csproj" />
   <Project Path="Cajero.Core/Cajero.Core.csproj" />
   <Project Path="Cajero.Web/Cajero.Web.csproj" Id="f0289670-4bb4-4b5f-94d9-571e771584fd" />
