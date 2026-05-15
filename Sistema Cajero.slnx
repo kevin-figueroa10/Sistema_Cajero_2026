@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="Cajero.Core/Cajero.Core.csproj" />
+  <Project Path="Cajero.Tests/Cajero.Tests.csproj" />
+  <Project Path="Cajero.Web/Cajero.Web.csproj" />
+</Solution>
