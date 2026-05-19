@@ -31,6 +31,18 @@ El proyecto está organizado en 4 componentes principales:
 - Validación de operaciones
 - Integración continua
 
+🛠️ Tecnologías y Características
+| Tecnología                 | Versión       | Uso                              |
+|----------------------------|---------------|----------------------------------|
+| .NET SDK                   | 10.0          | Runtime y compilación            |
+| C#                         | 12+           | Lenguaje principal               |
+| ASP.NET Core               | 10.0          | Web Framework                    |
+| Razor Pages                | 10.0          | Views HTML con lógica            |
+| Session Management         | 10.0          | Gestión de sesiones de usuario   |
+| Inyección de Dependencias  | 10.0          | DI Container nativo              |
+| Xunit                      | 2.9.3         | Testing unitario                 |
+| Code Coverage              | Coverlet 6.0.4| Cobertura de código              |
+
 ## ✨ Características
 
 ### 🔐 Autenticación
@@ -105,18 +117,6 @@ Sistema Cajero/
 ├── Cajero.Tests/
 │   └── *Tests.cs
 └── README.md
-\\\
-
-## 🔧 Configuración
-
-### Puertos Web
-- **HTTP**: localhost:5000
-- **HTTPS**: localhost:5001
-
-### Sesiones
-- Timeout: 30 minutos
-- Cookie HttpOnly: Habilitada
-- Cookie Essential: Habilitada
 
 ## 📝 Notas de Desarrollo
 
@@ -127,6 +127,12 @@ Sistema Cajero/
 ## 👨‍💼 Equipo
 
 Proyecto desarrollado para **Sistema Cajero Automático 2026**
+José Javier Aguilar Amaya
+Dimas Emanuel Benítez Mejía
+Dana Paola Burgos Escobar 
+Kevin Isaac Figueroa Calderón 
+Manuel De Jesús Mejía Rivera 
+
 
 ## 📄 Licencia
 
